@@ -17,9 +17,16 @@ const AddTodo = ({ onAdd }) => {
   };
 
   const handleInputChange = (e) => {
-    setText(e.target.value);
-    if (error) {
+    const newText = e.target.value;
+    setText(newText);
+    if (error && newText.trim()) {
       setError('');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -29,13 +36,25 @@ const AddTodo = ({ onAdd }) => {
         type="text"
         value={text}
         onChange={handleInputChange}
+        onKeyPress={handleKeyPress}
         placeholder="Add a new todo..."
         maxLength={200}
+        aria-label="Add new todo"
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? 'todo-error' : undefined}
       />
       <button type="submit" disabled={!text.trim()}>
         Add Todo
       </button>
-      {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
+      {error && (
+        <span 
+          id="todo-error" 
+          style={{ color: 'red', marginLeft: '10px', display: 'block' }}
+          role="alert"
+        >
+          {error}
+        </span>
+      )}
     </form>
   );
 };
