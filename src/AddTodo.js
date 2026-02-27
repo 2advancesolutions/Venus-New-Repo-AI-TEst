@@ -16,12 +16,19 @@ const AddTodo = ({ onAdd }) => {
     }
   };
 
+  const handleInputChange = (e) => {
+    setText(e.target.value);
+    if (error) {
+      setError('');
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="add-todo">
       <input
         type="text"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Add a new todo..."
         maxLength={200}
       />
