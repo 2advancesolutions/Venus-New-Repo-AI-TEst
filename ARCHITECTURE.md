@@ -80,7 +80,7 @@ A lightweight, single-page todo application built with React and modern JavaScri
 ## File Layout
 
 ```
-sublic/
+src/
 ├── index.html          # HTML entry point
 ├── src/
 │   ├── main.jsx        # React app entry point
@@ -131,7 +131,7 @@ sublic/
 - **Reason**: Keep minimal and accessible for beginners
 - **Alternative**: JSDoc comments for type hints
 
-###ing: React Hooks
+### State Management: React Hooks
 - **Primary**: useState for state management
 - **Potential**: useEffect for localStorage persistence
 
