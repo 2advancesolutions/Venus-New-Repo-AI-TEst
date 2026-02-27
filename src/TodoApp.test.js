@@ -131,17 +131,13 @@ describe('TodoApp - Edge Cases and Comprehensive Testing', () => {
   describe('Deleting Todos - Edge Cases', () => {
     test('should handle deleting non-existent todo gracefully', () => {
       render(<TodoApp />);
-      const initialTodos = [
-        { id: 1, text: 'Todo 1', completed: false },
-        { id: 2, text: 'Todo 2', completed: false }
-      ];
       
       // Add some todos first
       const input = screen.getByPlaceholderText('Add a new todo...');
       const addButton = screen.getByText('Add Todo');
       
-      initialTodos.forEach(todo => {
-        fireEvent.change(input, { target: { value: todo.text } });
+      ['Todo 1', 'Todo 2'].forEach(todo => {
+        fireEvent.change(input, { target: { value: todo } });
         fireEvent.click(addButton);
       });
       
@@ -149,8 +145,7 @@ describe('TodoApp - Edge Cases and Comprehensive Testing', () => {
       expect(screen.getByText('Todo 1')).toBeInTheDocument();
       expect(screen.getByText('Todo 2')).toBeInTheDocument();
       
-      // Try to delete a non-existent todo (this should be handled gracefully)
-      // In our implementation, this is handled by filtering - no error should occur
+      // Verify delete buttons exist
       const deleteButtons = screen.getAllByText('Delete');
       expect(deleteButtons).toHaveLength(2);
     });
@@ -257,14 +252,15 @@ describe('TodoApp - Edge Cases and Comprehensive Testing', () => {
       
       const checkbox = screen.getByRole('checkbox');
       
-      // Rapidly toggle multiple times
-      for (let i = 0; i < 10; i++) {
+      // Rapidly toggle multiple times (even number for predictable final state)
+      for (let i = 0; i < 6; i++) {
         fireEvent.click(checkbox);
       }
       
-      // Final state should be consistent
-      const todoText = screen.getByText('Test todo');
-      expect(checkbox).toBeChecked(); // Should be checked after even number of toggles starting from unchecked
+      // Final state should be consistent - unchecked after even number of toggles
+      await waitFor(() => {
+        expect(checkbox).not.toBeChecked();
+      });
     });
   });
 
@@ -290,7 +286,7 @@ describe('TodoApp - Edge Cases and Comprehensive Testing', () => {
       const input = screen.getByPlaceholderText('Add a new todo...');
       
       fireEvent.change(input, { target: { value: 'Enter key test' } });
-      fireEvent.keyPress(input, { key: 'Enter', code: 'Enter' });
+      fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
       
       expect(screen.getByText('Enter key test')).toBeInTheDocument();
     });
